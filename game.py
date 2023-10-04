@@ -216,4 +216,4 @@ time.sleep(1)
 if Score >= 5:
     print("I like the way your brain works "+"\nYour score is ",Score)
 else:
-    print("\nI don't wanna make you feel bad about this game but you pretty bad at it")
+    print("\nI don't wanna make you feel bad about this game but you pretty bad at itt")
