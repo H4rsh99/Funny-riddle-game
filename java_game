@@ -1,0 +1,144 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+
+class Question {
+    private String questionText;
+    private String correctAnswer;
+    private List<String> options;
+
+    public Question(String questionText, String correctAnswer, List<String> options) {
+        this.questionText = questionText;
+        this.correctAnswer = correctAnswer;
+        this.options = options;
+    }
+
+    public String getQuestionText() {
+        return questionText;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public List<String> getOptions() {
+        return options;
+    }
+}
+
+class Player {
+    private String name;
+    private int score;
+
+    public Player(String name) {
+        this.name = name;
+        this.score = 0;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void incrementScore() {
+        score++;
+    }
+}
+
+public class QuizGame {
+    private List<Question> questions;
+    private List<Player> players;
+    private Scanner scanner;
+    private Random random;
+
+    public QuizGame() {
+        questions = new ArrayList<>();
+        players = new ArrayList<>();
+        scanner = new Scanner(System.in);
+        random = new Random();
+    }
+
+    public void addQuestion(Question question) {
+        questions.add(question);
+    }
+
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
+
+    public void startGame() {
+        System.out.println("Welcome to the Quiz Game!");
+
+        for (Player player : players) {
+            System.out.println("Player: " + player.getName());
+            System.out.println("Answer the following questions:");
+            for (int i = 0; i < questions.size(); i++) {
+                Question question = getRandomQuestion();
+                displayQuestion(question);
+                String userAnswer = getUserInput();
+                checkAnswer(player, question, userAnswer);
+            }
+            System.out.println(player.getName() + "'s score: " + player.getScore() + "/" + questions.size());
+            System.out.println();
+        }
+
+        displayCorrectAnswers();
+    }
+
+    private Question getRandomQuestion() {
+        int randomIndex = random.nextInt(questions.size());
+        return questions.remove(randomIndex);
+    }
+
+    private void displayQuestion(Question question) {
+        System.out.println(question.getQuestionText());
+        List<String> options = question.getOptions();
+        for (int i = 0; i < options.size(); i++) {
+            System.out.println(i + 1 + ". " + options.get(i));
+        }
+    }
+
+    private String getUserInput() {
+        System.out.print("Your answer (enter option number): ");
+        return scanner.nextLine();
+    }
+
+    private void checkAnswer(Player player, Question question, String userAnswer) {
+        String correctAnswer = question.getCorrectAnswer();
+        if (userAnswer.equals(correctAnswer)) {
+            System.out.println("Correct!\n");
+            player.incrementScore();
+        } else {
+            System.out.println("Incorrect. The correct answer is: " + correctAnswer + "\n");
+        }
+    }
+
+    private void displayCorrectAnswers() {
+        System.out.println("Quiz completed!");
+        System.out.println("Correct answers:");
+        for (Question question : questions) {
+            System.out.println(question.getQuestionText() + ": " + question.getCorrectAnswer());
+        }
+    }
+
+    public static void main(String[] args) {
+        QuizGame quizGame = new QuizGame();
+
+        // Add questions to the quiz
+        quizGame.addQuestion(new Question("What is the capital of France?",
+                "Paris", List.of("London", "Berlin", "Paris", "Madrid")));
+        quizGame.addQuestion(new Question("Which planet is known as the Red Planet?",
+                "Mars", List.of("Venus", "Mars", "Jupiter", "Saturn")));
+
+        // Add players
+        quizGame.addPlayer(new Player("Player 1"));
+        quizGame.addPlayer(new Player("Player 2"));
+
+        // Start the quiz
+        quizGame.startGame();
+    }
+}
